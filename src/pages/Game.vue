@@ -9,9 +9,6 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-@import '../sass/variables';
+@import '../sass/_colors';
 
-main {
-  color: $pink;
-}
 </style>

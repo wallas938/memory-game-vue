@@ -7,7 +7,11 @@ import getters from './getters';
 const store = createStore({
     state() {
         return {
-            test: 'test'
+            setup: {
+                theme: "numbers",
+                playerNumber: "one",
+                gridSize: "fourTimesFour",
+            }
         };
     },
     getters,
