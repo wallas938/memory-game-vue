@@ -1,5 +1,5 @@
 export default {
-    test(state) {
-        return state.test;
+    setup(state) {
+        return state.setup;
     }
 }

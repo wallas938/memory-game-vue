@@ -1,21 +1,5 @@
 <!-- Game setup start -->
 
-  Select Theme
-  Numbers
-  Icons
-
-  Number of Players
-  1
-  2
-  3
-  4
-
-  Grid Size
-  4x4
-  6x6
-
-  Start Game
-
   <!-- Game setup end -->
 
   <!-- Game board start -->
