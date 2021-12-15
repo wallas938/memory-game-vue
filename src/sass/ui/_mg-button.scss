@@ -1,0 +1,9 @@
+@import "../colors";
+
+@mixin mg-button {
+    border: none;
+    border-radius: 1.444444rem;
+    color: $white;
+    font-weight: bold;
+    font-style: normal;
+}

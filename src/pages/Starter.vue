@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <main class="starter">
     <h1>memory</h1>
@@ -6,16 +7,17 @@
 </template>
 
 <script>
-import GameSetup from "../components/GameSetup.vue";
+import GameSetup from '../components/GameSetup.vue';
+
 export default {
-  emits: ["new-setup"],
+  emits: ['new-setup'],
   components: {
     GameSetup,
   },
   methods: {
     async onNewSetup(newSetup) {
-      await this.$store.dispatch("updateSetup", newSetup);
-      this.$router.replace("/game");
+      await this.$store.dispatch('updateSetup', newSetup);
+      this.$router.replace('/game');
     },
   },
 };

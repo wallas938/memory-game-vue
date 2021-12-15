@@ -80,25 +80,25 @@ export default {
         sixTimesSix: false,
       },
       setup: {
-        theme: "numbers",
-        playerNumber: "one",
-        gridSize: "fourTimesFour",
+        theme: 'numbers',
+        playerNumber: 'one',
+        gridSize: 'fourTimesFour',
       },
     };
   },
   computed: {},
   methods: {
     setTheme(value) {
-      this.setActiveClass("theme", value);
-      this.updateSetup("theme", value);
+      this.setActiveClass('theme', value);
+      this.updateSetup('theme', value);
     },
     setPlayerNumber(value) {
-      this.setActiveClass("playerNumber", value);
-      this.updateSetup("playerNumber", value);
+      this.setActiveClass('playerNumber', value);
+      this.updateSetup('playerNumber', value);
     },
     setGridSize(value) {
-      this.setActiveClass("gridSize", value);
-      this.updateSetup("gridSize", value);
+      this.setActiveClass('gridSize', value);
+      this.updateSetup('gridSize', value);
     },
     startGame() {
       this.$emit('new-setup', this.setup);
@@ -122,6 +122,7 @@ export default {
 <style lang="scss" scoped>
 @import "../sass/_colors";
 @import "../sass/_variables";
+@import "../sass/ui/_mg-button";
 
 #game-setup {
   padding: 1.333333rem;
@@ -131,11 +132,7 @@ export default {
   margin: 0 auto;
 
   button {
-    border: none;
-    border-radius: 1.444444rem;
-    color: $white;
-    font-weight: bold;
-    font-style: normal;
+    @include mg-button;
   }
 
   .setup__row {

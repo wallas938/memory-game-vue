@@ -1,5 +1,5 @@
 export default {
-    setup(state) {
-        return state.setup;
-    }
-}
+  setup(state) {
+    return state.setup;
+  },
+};
