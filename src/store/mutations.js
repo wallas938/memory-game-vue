@@ -1,5 +1,5 @@
 export default {
-    updateSetup(state, payload) {
-        state.setup = payload;
-    }
-}
+  updateSetup(state, payload) {
+    state.setup = payload;
+  },
+};

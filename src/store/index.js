@@ -5,18 +5,18 @@ import actions from './actions';
 import getters from './getters';
 
 const store = createStore({
-    state() {
-        return {
-            setup: {
-                theme: "numbers",
-                playerNumber: "one",
-                gridSize: "fourTimesFour",
-            }
-        };
-    },
-    getters,
-    mutations,
-    actions
+  state() {
+    return {
+      setup: {
+        theme: '',
+        playerNumber: '',
+        gridSize: '', /* 'sixTimesSix' */
+      },
+    };
+  },
+  getters,
+  mutations,
+  actions,
 });
 
 export default store;
