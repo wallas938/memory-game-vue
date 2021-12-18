@@ -86,6 +86,7 @@ export default {
       },
     };
   },
+  emits: ['update:newSetup'],
   computed: {},
   methods: {
     setTheme(value) {
@@ -101,7 +102,7 @@ export default {
       this.updateSetup('gridSize', value);
     },
     startGame() {
-      this.$emit('new-setup', this.setup);
+      this.$emit('update:newSetup', { ...this.setup });
     },
     updateSetup(name, value) {
       this.setup[name] = value;

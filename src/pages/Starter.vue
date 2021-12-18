@@ -2,22 +2,21 @@
 <template>
   <main class="starter">
     <h1>memory</h1>
-    <game-setup @new-setup="onNewSetup"></game-setup>
+    <game-setup @update:newSetup="onNewSetup"></game-setup>
   </main>
 </template>
 
 <script>
-import GameSetup from '../components/GameSetup.vue';
+import GameSetup from "../components/GameSetup.vue";
 
 export default {
-  emits: ['new-setup'],
   components: {
     GameSetup,
   },
   methods: {
     async onNewSetup(newSetup) {
-      await this.$store.dispatch('updateSetup', newSetup);
-      this.$router.replace('/game');
+      await this.$store.dispatch("updateSetup", { setup: newSetup});
+      this.$router.replace("/game");
     },
   },
 };

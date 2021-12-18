@@ -11,18 +11,21 @@
     </header>
     <section id="game-container">
       <!-- Utiliser le composant Tile comme ça : <Tile /> -->
-      <section id="game__grid" :class="setup.gridSize">
+      <section id="game__grid" :class="gridSize">
         <tile
-          v-for="data in datas"
-          :key="data"
-          :size="gridSize"
-          :type="theme"
-          :state="'turned'"
+          v-for="(data, index) in gameDatas"
+          :key="index"
           :value="data"
+          :index="index"
+          :twoLastPicks="twoLastPicks"
+          @update:tile-picked="handlePick"
+          @update:empty-two-last-picks="handleTwoLastPicks"
+          @update:update-moves="updateMoves"
+          @update:endGame="updateEndGame"
         ></tile>
       </section>
-      <section id="game__datas" :class="{'datas--size': playerNumber < 2 }">
-        <GameData :player-number="playerNumber" />
+      <section id="game__datas" :class="{ 'datas--size': playerNumber < 2 }">
+        <GameBoard @update:timer="updateTimer($event)" :player-number="playerNumber" />
       </section>
     </section>
   </main>
@@ -31,28 +34,22 @@
 <script>
 import _shuffle from "lodash/shuffle";
 import Tile from "../components/Tile.vue";
-import GameData from "../components/GameData.vue";
+import GameBoard from "../components/GameBoard.vue";
 
 export default {
   components: {
     Tile,
-    GameData,
+    GameBoard,
   },
   data() {
     return {
-      setup: {
-        theme: "",
-        playerNumber: "",
-        gridSize: "",
-      },
-      datas: [],
+      gameDatas: [],
     };
   },
   created() {
-    this.setup = this.$store.getters.setup;
-    this.setDatas(this.setup.theme);
-    console.log(this.setup.playerNumber === 'one');
+    this.gameDatas = this.setDatas(this.$store.getters["theme"]);
   },
+  watch: {},
   computed: {
     theme() {
       return this.setup.theme;
@@ -60,7 +57,7 @@ export default {
     playerNumber() {
       let playerNumber = 1;
 
-      switch (this.setup.playerNumber) {
+      switch (this.$store.getters["playerNumber"]) {
         case "one":
           playerNumber = 1;
           break;
@@ -80,15 +77,30 @@ export default {
       return playerNumber;
     },
     gridSize() {
-      return this.setup.gridSize;
+      return this.$store.getters["gridSize"];
+    },
+    matches() {
+      return this.playerNumber < 2
+        ? this.$store.getters["solo/matches"]
+        : this.$store.getters["mutli/matches"];
+    },
+    attempts() {
+      return this.playerNumber < 2
+        ? this.$store.getters["solo/attempts"]
+        : this.$store.getters["mutli/attempts"];
+    },
+    twoLastPicks() {
+      return this.playerNumber < 2
+        ? this.$store.getters["solo/twoLastPicks"]
+        : this.$store.getters["mutli/twoLastPicks"];
     },
   },
   methods: {
     setDatas(theme) {
       if (theme === "numbers") {
-        this.datas = this.setNumbers();
+        return this.setNumbers();
       } else {
-        this.datas = this.setIcons();
+        return this.setIcons();
       }
     },
     setNumbers() {
@@ -212,6 +224,23 @@ export default {
         ]);
       }
     },
+    handlePick($event) {
+      this.$store.dispatch("solo/updateAttempts", { attempt: 1 });
+      this.$store.dispatch("solo/updateCurrentPick", { currentPick: $event });
+    },
+    updateMoves() {
+      this.$store.dispatch("solo/updateMoves");
+    },
+    handleTwoLastPicks() {
+      this.$store.dispatch("solo/updateAttempts", { attempt: 1 });
+      this.$store.dispatch("solo/emptyLastPicks");
+    },
+    updateEndGame() {
+      this.$store.dispatch('updateEndGame');
+    },
+    updateTimer(timer) {
+      this.$store.dispatch('solo/updateTimer', { timer: timer })
+    }
   },
 };
 </script>
@@ -334,7 +363,7 @@ export default {
     }
   }
 
-/** Taille de la section data à 540px si joueur unique */
+  /** Taille de la section data à 540px si joueur unique */
   .datas--size {
     max-width: 30rem;
     margin: 0 auto;
