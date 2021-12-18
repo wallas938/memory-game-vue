@@ -2,17 +2,78 @@
   <div id="solo-data">
     <section class="timer">
       <p>Time</p>
-      <span>1:53</span>
+      <span>{{ getTimer }}</span>
     </section>
     <section class="moves">
       <p>Moves</p>
-      <span>39</span>
+      <span>{{ moves }}</span>
     </section>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  emits: ['update:timer'],
+  data() {
+    return {
+      timer: "2:00",
+      startAt: new Date(new Date(120000)), // 2min
+      minusTime: 0,
+      timerInterval: null,
+    };
+  },
+  created() {
+    this.startTimer();
+  },
+  methods: {
+    startTimer() {
+      this.timerInterval = setInterval(() => {
+        this.timer =
+          new Date(this.startAt - this.minusTime).getMinutes().toString() +
+          ":" +
+          (new Date(this.startAt - this.minusTime).getSeconds().toString()
+            .length <= 1
+            ? "0" +
+              new Date(this.startAt - this.minusTime).getSeconds().toString()
+            : new Date(this.startAt - this.minusTime).getSeconds().toString());
+        this.updateMinusTime();
+      }, 1000);
+    },
+    updateMinusTime() {
+      this.minusTime += 1000;
+    },
+    stopTimer() {
+      clearInterval(this.timerInterval);
+    },
+  },
+  computed: {
+    getTimer() {
+      return this.timer;
+    },
+    matches() {
+      return this.$store.getters['solo/matches'];
+    },
+    moves() {
+      return this.$store.getters['solo/moves'];
+    },
+    endGame() {
+      return this.$store.getters['endGame'];
+    }
+  },
+  watch: {
+    timer(time) {
+      if (time === "0:00") {
+        this.stopTimer();
+      }
+    },
+    endGame(status) {
+      if (status) {
+        this.stopTimer();
+        this.$emit('update:timer', this.timer);
+      }
+    }
+  },
+};
 </script>
 
 <style lang="scss" scoped>

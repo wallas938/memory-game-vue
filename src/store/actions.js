@@ -1,10 +1,15 @@
 export default {
   /**
- *@param {object} context vuex context
+ *@param {object} context store context
  *@param {object} payload user's setup send througout the page game setup
  *@returns {void} It calls updateSetup mutation
  */
   updateSetup(context, payload) {
-    context.commit('updateSetup', payload);
+    context.commit('updateTheme', { theme: payload.setup.theme });
+    context.commit('updatePlayerNumber', { playerNumber: payload.setup.playerNumber });
+    context.commit('updateGridSize', { gridSize: payload.setup.gridSize });
+  },
+  updateEndGame(context) {
+    context.commit('updateEndGame', { endGame: true });
   },
 };

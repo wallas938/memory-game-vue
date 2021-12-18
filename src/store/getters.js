@@ -1,5 +1,14 @@
 export default {
-  setup(state) {
-    return state.setup;
+  theme(state) {
+    return state.theme;
+  },
+  playerNumber(state) {
+    return state.playerNumber;
+  },
+  gridSize(state) {
+    return state.gridSize;
+  },
+  endGame(state) {
+    return state.endGame;
   },
 };

@@ -1,18 +1,23 @@
 import { createStore } from 'vuex';
 
+/** Modules */
+import soloModule from './modules/solo-module/index';
+import multiModule from './modules/multi-module/index';
+
 import mutations from './mutations';
 import actions from './actions';
 import getters from './getters';
 
 const store = createStore({
-  state() {
-    return {
-      setup: {
-        theme: '',
-        playerNumber: '',
-        gridSize: '', /* 'sixTimesSix' */
-      },
-    };
+  modules: {
+    solo: soloModule,
+    multi: multiModule
+  },
+  state: {
+    theme: 'numbers',
+    playerNumber: 'one',
+    gridSize: 'fourTimesFour', /* 'sixTimesSix' */
+    endGame: false,
   },
   getters,
   mutations,
