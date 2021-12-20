@@ -1,8 +1,7 @@
 <template>
   <div
     class="panel"
-    :class="{ 'turn-to-play': checkTurn, waiting: !checkTurn }"
-  >
+    :class="{ 'turn-to-play': checkCurrentTurn, 'waiting': !checkCurrentTurn }">
     <p class="player-number">
       <span class="hide-for-tablet-and-desktop">P{{ playerNumber }}</span>
       <span class="hide-for-mobile">Player {{ playerNumber }}</span>
@@ -10,7 +9,7 @@
     <p class="player-points">
       <span>{{ points }}</span>
     </p>
-    <p v-if="checkTurn" class="current-turn-txt hide-for-mobile hide-for-tablet">CURRENT TRUN</p>
+    <p v-if="checkCurrentTurn" class="current-turn-txt hide-for-mobile hide-for-tablet">CURRENT TRUN</p>
   </div>
 </template>
 
@@ -24,24 +23,19 @@ export default {
         return playerNumber > 0 && playerNumber <= 4;
       },
     },
-    turn: {
-      type: Number,
+    currentTurn: {
+      type: Boolean,
       required: true,
-      Validator(turn) {
-        return turn > 0 && turn <= 4;
-      },
     },
     points: {
       type: Number,
       required: true,
-      Validator(points) {
-        return points >= 0 && points <= 16;
-      },
     },
   },
+  emits: ["update:currentTurn"],
   computed: {
-    checkTurn() {
-      return this.turn === this.playerNumber;
+    checkCurrentTurn() {
+      return this.currentTurn;
     },
   },
 };

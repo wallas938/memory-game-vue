@@ -15,7 +15,7 @@ const store = createStore({
   },
   state: {
     theme: 'numbers',
-    playerNumber: 'one',
+    playerNumber: 'one', /* one, two, three, four */
     gridSize: 'fourTimesFour', /* 'sixTimesSix' */
     endGame: false,
   },

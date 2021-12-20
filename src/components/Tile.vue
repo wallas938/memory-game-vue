@@ -29,24 +29,28 @@ export default {
       type: String,
       required: true,
     },
-    twoLastPicks: {
-      type: Array,
-      required: true,
-    },
     index: {
       type: Number,
       required: true,
     },
+    isMulti: {
+      type: Boolean,
+      required: true,
+    },
+    twoLastPicks: {
+      type: Array,
+      required: true,
+    },
   },
   emits: [
-    "update:tilePicked",
+    "update:currentPick",
     "update:emptyTwoLastPicks",
     "update:updateMoves",
     "update:endGame",
   ],
   data() {
     return {
-      state: "turned",
+      state: "hidden", // turned, hidden & match
     };
   },
   created() {},
@@ -61,25 +65,27 @@ export default {
       return this.$store.getters["theme"];
     },
     matches() {
-      return this.$store.getters["solo/matches"];
+      return !this.isMulti
+        ? this.$store.getters["solo/matches"]
+        : this.$store.getters["multi/matches"];
     },
   },
   watch: {
     twoLastPicks(value) {
       if (value.length >= 2 && value.includes(this.value)) {
-        this.initTileState();
         this.$emit("update:emptyTwoLastPicks");
+        this.initTileState();
       }
     },
     matches(value) {
       if (value.includes(this.value)) {
-        this.matcheTile();
+        this.matchTile();
       }
       if (
         (value.length === 8 && this.gridSize === "fourTimesFour") ||
         (value.length === 18 && this.gridSize === "sixTimesSix")
       ) {
-        this.$emit('update:endGame')
+        this.$emit("update:endGame");
       }
     },
   },
@@ -87,12 +93,12 @@ export default {
     showTile() {
       if (this.state !== "match") {
         this.state = "turned";
-        this.handlePick();
+        this.handleCurrentPick();
       }
     },
-    handlePick() {
+    handleCurrentPick() {
       if (!this.matches.includes(this.value)) {
-        this.$emit("update:tilePicked", {
+        this.$emit("update:currentPick", {
           value: this.value,
           index: this.index,
         });
@@ -103,7 +109,7 @@ export default {
         this.state = "hidden";
       }, 850);
     },
-    matcheTile() {
+    matchTile() {
       this.state = "match";
     },
     updateMoves() {
