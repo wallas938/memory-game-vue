@@ -1,3 +1,5 @@
+import { setPlayers } from '../utils/index';
+
 export default {
   /**
  *@param {object} context store context
@@ -8,6 +10,8 @@ export default {
     context.commit('updateTheme', { theme: payload.setup.theme });
     context.commit('updatePlayerNumber', { playerNumber: payload.setup.playerNumber });
     context.commit('updateGridSize', { gridSize: payload.setup.gridSize });
+    const players = setPlayers(payload.setup.playerNumber);
+    context.commit('multi/updatePlayers', { players: players });
   },
   updateEndGame(context) {
     context.commit('updateEndGame', { endGame: true });

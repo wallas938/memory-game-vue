@@ -11,7 +11,6 @@ export default {
   matches(state) {
     return state.matches;
   },
-
   currentPick(state) {
     return state.currentPick;
   },

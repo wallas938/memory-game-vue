@@ -25,7 +25,7 @@ ex: [1,1,5,5]
   updateTwoLastPicks(state, payload) {
     state.twoLastPicks = payload.twoLastPicks;
   },
-  emptyLastPicks(state) {
+  emptyTwoLastPicks(state) {
     state.twoLastPicks = [];
   },
   updateTimer(state, payload) {

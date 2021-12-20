@@ -17,15 +17,16 @@
           :key="index"
           :value="data"
           :index="index"
+          :isMulti="isMulti"
           :twoLastPicks="twoLastPicks"
-          @update:tile-picked="handlePick"
-          @update:empty-two-last-picks="handleTwoLastPicks"
+          @update:current-pick="handlePick"
+          @update:empty-two-last-picks="emptyTwoLastPicks"
           @update:update-moves="updateMoves"
           @update:endGame="updateEndGame"
         ></tile>
       </section>
-      <section id="game__datas" :class="{ 'datas--size': playerNumber < 2 }">
-        <GameBoard @update:timer="updateTimer($event)" :player-number="playerNumber" />
+      <section id="game__datas" :class="{ 'datas--size': !isMulti }">
+        <GameBoard @update:timer="updateTimer($event)" />
       </section>
     </section>
   </main>
@@ -49,50 +50,43 @@ export default {
   created() {
     this.gameDatas = this.setDatas(this.$store.getters["theme"]);
   },
-  watch: {},
+  watch: {
+  },
   computed: {
     theme() {
       return this.setup.theme;
     },
-    playerNumber() {
-      let playerNumber = 1;
-
-      switch (this.$store.getters["playerNumber"]) {
-        case "one":
-          playerNumber = 1;
-          break;
-        case "two":
-          playerNumber = 2;
-          break;
-        case "three":
-          playerNumber = 3;
-          break;
-        case "four":
-          playerNumber = 4;
-          break;
-        default:
-          playerNumber = 1;
-          break;
-      }
-      return playerNumber;
-    },
     gridSize() {
       return this.$store.getters["gridSize"];
     },
+    soloMatches() {
+      return this.$store.getters["solo/matches"];
+    },
+    multiMatches() {
+      return this.$store.getters["multi/matches"];
+    },
     matches() {
-      return this.playerNumber < 2
-        ? this.$store.getters["solo/matches"]
-        : this.$store.getters["mutli/matches"];
+      return this.isMulti ? this.multiMatches : this.soloMatches;
     },
     attempts() {
-      return this.playerNumber < 2
+      return !this.isMulti
         ? this.$store.getters["solo/attempts"]
-        : this.$store.getters["mutli/attempts"];
+        : this.$store.getters["multi/attempts"];
+    },
+    soloTwoLastPicks() {
+      return this.$store.getters["solo/twoLastPicks"];
+    },
+    multiTwoLastPicks() {
+      return this.$store.getters["multi/twoLastPicks"];
     },
     twoLastPicks() {
-      return this.playerNumber < 2
-        ? this.$store.getters["solo/twoLastPicks"]
-        : this.$store.getters["mutli/twoLastPicks"];
+      return this.isMulti ? this.multiTwoLastPicks : this.soloTwoLastPicks;
+    },
+    currentTurn() {
+      return this.$store.getters["multi/currentTurn"];
+    },
+    isMulti() {
+      return this.$store.getters["multi/players"].length > 1;
     },
   },
   methods: {
@@ -225,22 +219,32 @@ export default {
       }
     },
     handlePick($event) {
-      this.$store.dispatch("solo/updateAttempts", { attempt: 1 });
-      this.$store.dispatch("solo/updateCurrentPick", { currentPick: $event });
+      if (!this.isMulti) {
+        this.$store.dispatch("solo/updateAttempts", { attempt: 1 });
+        this.$store.dispatch("solo/updateCurrentPick", { currentPick: $event });
+        return;
+      }
+      this.$store.dispatch("multi/updateAttempts", { attempt: 1 });
+      this.$store.dispatch("multi/updateCurrentPick", { currentPick: $event });
     },
     updateMoves() {
       this.$store.dispatch("solo/updateMoves");
     },
-    handleTwoLastPicks() {
-      this.$store.dispatch("solo/updateAttempts", { attempt: 1 });
-      this.$store.dispatch("solo/emptyLastPicks");
+    emptyTwoLastPicks() {
+      if (!this.isMulti) {
+        this.$store.dispatch("solo/updateAttempts", { attempt: 1 });
+        this.$store.dispatch("solo/emptyTwoLastPicks");
+        return;
+      }
+      this.$store.dispatch("multi/updateAttempts", { attempt: 1 });
+      this.$store.dispatch("multi/emptyTwoLastPicks");
     },
     updateEndGame() {
-      this.$store.dispatch('updateEndGame');
+      this.$store.dispatch("updateEndGame");
     },
     updateTimer(timer) {
-      this.$store.dispatch('solo/updateTimer', { timer: timer })
-    }
+      this.$store.dispatch("solo/updateTimer", { timer: timer });
+    },
   },
 };
 </script>

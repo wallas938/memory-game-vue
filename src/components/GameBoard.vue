@@ -1,15 +1,15 @@
 <template>
-  <div class="multi-game-data" v-if="howManyPlayers">
+  <div class="multi-game-data" v-if="isMulti">
     <game-panel
-      v-for="data of howManyPlayers"
-      :key="data"
-      :playerNumber="3"
-      :points="0"
-      :turn="1"
+      v-for="(player, idx) of players"
+      :key="idx"
+      :playerNumber="player._playerNumber"
+      :points="player._points"
+      :currentTurn="currentTurn === player._playerNumber"
     />
   </div>
   <div class="solo-game-data" v-else>
-    <solo-data @update:timer="updateTimer($event)"/>
+    <solo-data @update:timer="updateTimer($event)" />
   </div>
 </template>
 
@@ -22,18 +22,23 @@ export default {
     SoloData,
   },
   created() {},
-  props: ['playerNumber'],
-  emits: ['update:timer'],
+  emits: ["update:timer"],
   computed: {
-    howManyPlayers() {
-      return this.playerNumber > 1;
+    isMulti() {
+      return this.players.length > 1;
     },
+    players() {
+      return this.$store.getters["multi/players"];
+    },
+    currentTurn() {
+      return this.$store.getters["multi/currentTurn"];
+    }
   },
   methods: {
     updateTimer(timer) {
-      this.$emit('update:timer', timer);
-    }
-  }
+      this.$emit("update:timer", timer);
+    },
+  },
 };
 </script>
 

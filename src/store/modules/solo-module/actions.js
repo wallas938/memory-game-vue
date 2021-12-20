@@ -10,25 +10,25 @@ export default {
   updateMatches(context, payload) {
     context.commit('updateMatches', { matches: payload.matches });
   },
-  updateCurrentPick(context, playload) {
+  updateCurrentPick(context, payload) {
     const twoLastPicks = context.getters.twoLastPicks;
     context.commit('updateMoves');
     if (context.getters.currentPick == null) {
-      context.commit('updateCurrentPick', { currentPick: playload.currentPick });
-      context.commit('updateTwoLastPicks', { twoLastPicks: [...twoLastPicks, playload.currentPick.value] });
+      context.commit('updateCurrentPick', { currentPick: payload.currentPick });
+      context.commit('updateTwoLastPicks', { twoLastPicks: [...twoLastPicks, payload.currentPick.value] });
       return;
     }
 
-    if (context.getters.currentPick.value === playload.currentPick.value &&
-      context.getters.currentPick.index !== playload.currentPick.index) {
-      context.commit('updateMatches', { matches: [...context.getters.matches, playload.currentPick.value] });
+    if (context.getters.currentPick.value === payload.currentPick.value &&
+      context.getters.currentPick.index !== payload.currentPick.index) {
+      context.dispatch('updateMatches', { matches: [...context.getters.matches, payload.currentPick.value] });
       context.commit('updateCurrentPick', { currentPick: null });
       context.commit('updateTwoLastPicks', { twoLastPicks: [] });
       return;
     }
 
     context.commit('updateCurrentPick', { currentPick: null });
-    context.commit('updateTwoLastPicks', { twoLastPicks: [...twoLastPicks, playload.currentPick.value] });
+    context.commit('updateTwoLastPicks', { twoLastPicks: [...twoLastPicks, payload.currentPick.value] });
   },
 
   updateAttempts(context, payload) {
@@ -42,7 +42,7 @@ export default {
   updateTimer(context, payload) {
     context.commit('updateTimer', { timer: payload.timer });
   },
-  emptyLastPicks(context) {
-    context.commit('emptyLastPicks');
+  emptyTwoLastPicks(context) {
+    context.commit('emptyTwoLastPicks');
   },
 };
