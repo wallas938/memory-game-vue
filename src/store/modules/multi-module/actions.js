@@ -69,5 +69,13 @@ export default {
   },
   updatePlayerPoints(context) {
     context.commit('updatePlayerPoints');
+  },
+  restart(context) {
+    context.commit('emptyTwoLastPicks');
+    context.commit('updateCurrentPick', { currentPick: null });
+    context.commit('updateMatches', { matches: [] });
+    context.commit('resetPlayerPoints');
+    context.commit('updateCurrentTurn', { currentTurn: 1 });
+    context.dispatch('restart', { status: true }, { root: true });
   }
 };

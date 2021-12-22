@@ -45,4 +45,11 @@ export default {
   emptyTwoLastPicks(context) {
     context.commit('emptyTwoLastPicks');
   },
+  restart(context) {
+    context.commit('resetMoves');
+    context.commit('updateCurrentPick', { currentPick: null });
+    context.commit('updateMatches', { matches: [] });
+    context.commit('updateAttempts', { attempts: 0 });
+    context.dispatch('restart', { status: true }, { root: true });
+  }
 };

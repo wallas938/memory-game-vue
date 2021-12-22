@@ -1,12 +1,20 @@
 <!-- eslint-disable -->
 <template>
   <main id="game">
+    <game-menu
+      :showMenu="showMenu"
+      @update:close-menu="closeMenu"
+      @update:new-game="newGame"
+      @update:restart="restart"
+    ></game-menu>
     <header id="game__header">
       <p>memory</p>
-      <button class="menu hide-for-tablet-and-desktop">Menu</button>
+      <button class="menu hide-for-tablet-and-desktop" @click="openMenu">
+        Menu
+      </button>
       <div class="cta hide-for-mobile">
-        <button class="restart">Restart</button>
-        <button class="new-game">New Game</button>
+        <button class="restart" @click="restart">Restart</button>
+        <button class="new-game" @click="newGame">New Game</button>
       </div>
     </header>
     <section id="game-container">
@@ -19,14 +27,16 @@
           :index="index"
           :isMulti="isMulti"
           :twoLastPicks="twoLastPicks"
+          :reset="reset"
           @update:current-pick="handlePick"
           @update:empty-two-last-picks="emptyTwoLastPicks"
-          @update:update-moves="updateMoves"
+          @update:moves="updateMoves"
           @update:endGame="updateEndGame"
+          @update:gameReseted="gameReseted"
         ></tile>
       </section>
       <section id="game__datas" :class="{ 'datas--size': !isMulti }">
-        <GameBoard @update:timer="updateTimer($event)" />
+        <GameBoard :pause="showMenu" @update:timer="updateTimer($event)" />
       </section>
     </section>
   </main>
@@ -36,25 +46,27 @@
 import _shuffle from "lodash/shuffle";
 import Tile from "../components/Tile.vue";
 import GameBoard from "../components/GameBoard.vue";
+import GameMenu from "../components/GameMenu.vue";
 
 export default {
   components: {
     Tile,
     GameBoard,
+    GameMenu,
   },
   data() {
     return {
       gameDatas: [],
+      showMenu: false,
+      reset: false,
     };
   },
   created() {
-    this.gameDatas = this.setDatas(this.$store.getters["theme"]);
-  },
-  watch: {
+    this.gameDatas = this.setDatas(this.theme);
   },
   computed: {
     theme() {
-      return this.setup.theme;
+      return this.$store.getters["theme"];
     },
     gridSize() {
       return this.$store.getters["gridSize"];
@@ -244,6 +256,28 @@ export default {
     },
     updateTimer(timer) {
       this.$store.dispatch("solo/updateTimer", { timer: timer });
+    },
+    openMenu() {
+      this.showMenu = true;
+    },
+    closeMenu() {
+      this.showMenu = false;
+    },
+    newGame() {
+      this.$router.push("/starter");
+    },
+    restart() {
+      this.reset = true;
+      if (this.isMulti) {
+        this.$store.dispatch("multi/restart");
+        return;
+      }
+      this.$store.dispatch("solo/restart");
+    },
+    gameReseted() {
+      this.gameDatas = this.setDatas(this.theme);
+      this.reset = false;
+      this.$store.dispatch("restart", { status: false });
     },
   },
 };

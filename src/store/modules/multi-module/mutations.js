@@ -26,6 +26,12 @@ export default {
       return player;
     });
   },
+  resetPlayerPoints(state) {
+    state.players = state.players.map((player) => {
+      player.points = 0;
+      return player;
+    });
+  },
   emptyTwoLastPicks(state) {
     state.twoLastPicks = [];
   },

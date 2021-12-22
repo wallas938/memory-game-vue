@@ -13,37 +13,40 @@
 
 <script>
 export default {
-  emits: ['update:timer'],
+  emits: ["update:timer"],
+  props: ["pause"],
   data() {
     return {
       timer: "2:00",
-      startAt: new Date(new Date(120000)), // 2min
+      defaultTime: new Date(120000), // 2min
       minusTime: 0,
       timerInterval: null,
+      currentTime: null,
     };
   },
   created() {
-    this.startTimer();
+    this.startTimer(this.defaultTime);
   },
   methods: {
-    startTimer() {
+    startTimer(time) {
       this.timerInterval = setInterval(() => {
         this.timer =
-          new Date(this.startAt - this.minusTime).getMinutes().toString() +
+          new Date(time - this.minusTime).getMinutes().toString() +
           ":" +
-          (new Date(this.startAt - this.minusTime).getSeconds().toString()
-            .length <= 1
-            ? "0" +
-              new Date(this.startAt - this.minusTime).getSeconds().toString()
-            : new Date(this.startAt - this.minusTime).getSeconds().toString());
-        this.updateMinusTime();
+          (new Date(time - this.minusTime).getSeconds().toString().length <= 1
+            ? "0" + new Date(time - this.minusTime).getSeconds().toString()
+            : new Date(time - this.minusTime).getSeconds().toString());
+        this.minusTime += 1000;
+        this.currentTime = time - this.minusTime;
       }, 1000);
-    },
-    updateMinusTime() {
-      this.minusTime += 1000;
     },
     stopTimer() {
       clearInterval(this.timerInterval);
+      this.timerInterval = null;
+      this.minusTime = 0;
+    },
+    resetTimer() {
+      this.timer = "2:00";
     },
   },
   computed: {
@@ -51,14 +54,17 @@ export default {
       return this.timer;
     },
     matches() {
-      return this.$store.getters['solo/matches'];
+      return this.$store.getters["solo/matches"];
     },
     moves() {
-      return this.$store.getters['solo/moves'];
+      return this.$store.getters["solo/moves"];
     },
     endGame() {
-      return this.$store.getters['endGame'];
-    }
+      return this.$store.getters["endGame"];
+    },
+    restart() {
+      return this.$store.getters["restart"];
+    },
   },
   watch: {
     timer(time) {
@@ -66,12 +72,26 @@ export default {
         this.stopTimer();
       }
     },
+    pause(status) {
+      if (status) {
+        this.stopTimer();
+      } else {
+        this.restart && this.startTimer(this.currentTime);
+      }
+    },
+    restart(status) {
+      if (status) {
+        this.resetTimer();
+        this.stopTimer();
+        this.startTimer(this.defaultTime);
+      }
+    },
     endGame(status) {
       if (status) {
         this.stopTimer();
-        this.$emit('update:timer', this.timer);
+        this.$emit("update:timer", this.timer);
       }
-    }
+    },
   },
 };
 </script>

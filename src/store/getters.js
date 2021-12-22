@@ -11,4 +11,7 @@ export default {
   endGame(state) {
     return state.endGame;
   },
+  restart(state) {
+    return state.restart;
+  }
 };
