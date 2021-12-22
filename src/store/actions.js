@@ -16,4 +16,7 @@ export default {
   updateEndGame(context) {
     context.commit('updateEndGame', { endGame: true });
   },
+  restart(context, payload) {
+    context.commit('restart', { status: payload.status });
+  }
 };

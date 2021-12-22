@@ -18,6 +18,7 @@ const store = createStore({
     playerNumber: 'one', /* one, two, three, four */
     gridSize: 'fourTimesFour', /* 'sixTimesSix' */
     endGame: false,
+    restart: false
   },
   getters,
   mutations,

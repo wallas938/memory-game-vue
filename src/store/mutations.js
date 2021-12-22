@@ -11,4 +11,7 @@ export default {
   updateEndGame(state, payload) {
     state.endGame = payload.endGame;
   },
+  restart(state, payload) {
+    state.restart = payload.status;
+  }
 };

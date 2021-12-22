@@ -7,6 +7,9 @@ ex: { moves: 13 }
   updateMoves(state) {
     state.moves = state.moves + 1;
   },
+  resetMoves(state) {
+    state.moves = 0;
+  },
 
   /**
 *@param {Array} payload An array of user's matches

@@ -37,16 +37,21 @@ export default {
       type: Boolean,
       required: true,
     },
+    reset: {
+      type: Boolean,
+      required: true,
+    },
     twoLastPicks: {
       type: Array,
       required: true,
     },
   },
   emits: [
+    "update:moves",
+    "update:endGame",
+    "update:gameReseted",
     "update:currentPick",
     "update:emptyTwoLastPicks",
-    "update:updateMoves",
-    "update:endGame",
   ],
   data() {
     return {
@@ -88,6 +93,12 @@ export default {
         this.$emit("update:endGame");
       }
     },
+    reset(status) {
+      if (status) {
+        this.state = "hidden";
+        this.index === 0 && this.$emit("update:gameReseted");
+      }
+    },
   },
   methods: {
     showTile() {
@@ -106,14 +117,17 @@ export default {
     },
     initTileState() {
       setTimeout(() => {
-        this.state = "hidden";
+        this.hideTile();
       }, 850);
     },
     matchTile() {
       this.state = "match";
     },
-    updateMoves() {
-      this.$emit("update:updateMoves");
+    hideTile() {
+      this.state = "hidden";
+    },
+    moves() {
+      this.$emit("update:moves");
     },
   },
 };
@@ -131,6 +145,7 @@ export default {
   justify-content: center;
   font-weight: bold;
   font-style: normal;
+  user-select: none;
   cursor: pointer;
 }
 
