@@ -32,7 +32,7 @@ export default {
       required: true,
     },
   },
-  emits: ["update:currentTurn"],
+  // emits: ["update:currentTurn"],
   computed: {
     checkCurrentTurn() {
       return this.currentTurn;

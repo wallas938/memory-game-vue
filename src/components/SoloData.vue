@@ -13,12 +13,11 @@
 
 <script>
 export default {
-  emits: ["update:timer"],
-  props: ["pause"],
+  inject: ["pause", "updateTimeElapsed", "updateEndGame", "updateWinning"],
   data() {
     return {
       timer: "2:00",
-      defaultTime: new Date(120000), // 2min
+      defaultTime: new Date(120000), // 120000 = 2min
       minusTime: 0,
       timerInterval: null,
       currentTime: null,
@@ -26,6 +25,62 @@ export default {
   },
   created() {
     this.startTimer(this.defaultTime);
+  },
+  computed: {
+    getTimer() {
+      return this.timer;
+    },
+    matches() {
+      return this.$store.getters["solo/matches"];
+    },
+    moves() {
+      return this.$store.getters["solo/moves"];
+    },
+    endGame() {
+      return this.$store.getters["endGame"];
+    },
+    restart() {
+      return this.$store.getters["restart"];
+    },
+    winning() {
+      return this.$store.getters["winning"];
+    },
+  },
+  watch: {
+    timer(time) {
+      if (time === "0:00") {
+        this.updateTimeElapsed(this.getElapsedTime());
+        this.stopTimer();
+        this.updateEndGame(true);
+        this.updateWinning(false);
+      }
+    },
+    pause(status) {
+      if (status) {
+        this.stopTimer();
+      } else {
+        this.restart && this.startTimer(this.currentTime);
+      }
+    },
+    restart(status) {
+      if (status) {
+        this.resetTimer();
+        this.stopTimer();
+        this.startTimer(this.defaultTime);
+      }
+    },
+    endGame(status) {
+      if (status) {
+        this.updateTimeElapsed(this.getElapsedTime());
+        this.stopTimer();
+      }
+    },
+    winning(status) {
+      if (status) {
+        this.updateTimeElapsed(this.getElapsedTime());
+        this.stopTimer();
+      }
+    },
   },
   methods: {
     startTimer(time) {
@@ -48,49 +103,14 @@ export default {
     resetTimer() {
       this.timer = "2:00";
     },
-  },
-  computed: {
-    getTimer() {
-      return this.timer;
-    },
-    matches() {
-      return this.$store.getters["solo/matches"];
-    },
-    moves() {
-      return this.$store.getters["solo/moves"];
-    },
-    endGame() {
-      return this.$store.getters["endGame"];
-    },
-    restart() {
-      return this.$store.getters["restart"];
-    },
-  },
-  watch: {
-    timer(time) {
-      if (time === "0:00") {
-        this.stopTimer();
-      }
-    },
-    pause(status) {
-      if (status) {
-        this.stopTimer();
-      } else {
-        this.restart && this.startTimer(this.currentTime);
-      }
-    },
-    restart(status) {
-      if (status) {
-        this.resetTimer();
-        this.stopTimer();
-        this.startTimer(this.defaultTime);
-      }
-    },
-    endGame(status) {
-      if (status) {
-        this.stopTimer();
-        this.$emit("update:timer", this.timer);
-      }
+    getElapsedTime() {
+      const timeElapsed =
+        new Date(this.minusTime - 1000).getMinutes().toString() +
+        ":" +
+        (new Date(this.minusTime - 1000).getSeconds().toString().length <= 1
+          ? "0" + new Date(this.minusTime - 1000).getSeconds().toString()
+          : new Date(this.minusTime - 1000).getSeconds().toString());
+      return timeElapsed;
     },
   },
 };

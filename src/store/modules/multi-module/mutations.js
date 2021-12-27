@@ -35,4 +35,7 @@ export default {
   emptyTwoLastPicks(state) {
     state.twoLastPicks = [];
   },
+  updateWinners(state, payload) {
+    state.winners = payload.winners;
+  }
 };

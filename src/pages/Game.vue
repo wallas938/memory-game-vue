@@ -7,6 +7,12 @@
       @update:new-game="newGame"
       @update:restart="restart"
     ></game-menu>
+    <result-board
+      :isMulti="isMulti"
+      @update:restart="restart"
+      @update:setNewGame="newGame"
+      @upadte:endGame="updateEndGame"
+    ></result-board>
     <header id="game__header">
       <p>memory</p>
       <button class="menu hide-for-tablet-and-desktop" @click="openMenu">
@@ -33,10 +39,11 @@
           @update:moves="updateMoves"
           @update:endGame="updateEndGame"
           @update:gameReseted="gameReseted"
+          @update:winning="updateWinning"
         ></tile>
       </section>
       <section id="game__datas" :class="{ 'datas--size': !isMulti }">
-        <GameBoard :pause="showMenu" @update:timer="updateTimer($event)" />
+        <GameBoard />
       </section>
     </section>
   </main>
@@ -47,18 +54,28 @@ import _shuffle from "lodash/shuffle";
 import Tile from "../components/Tile.vue";
 import GameBoard from "../components/GameBoard.vue";
 import GameMenu from "../components/GameMenu.vue";
+import ResultBoard from "../components/ResultBoard.vue";
 
 export default {
   components: {
     Tile,
     GameBoard,
     GameMenu,
+    ResultBoard,
   },
   data() {
     return {
       gameDatas: [],
       showMenu: false,
       reset: false,
+    };
+  },
+  provide() {
+    return {
+      pause: this.showMenu,
+      updateTimeElapsed: this.updateTimeElapsed,
+      updateEndGame: this.updateEndGame,
+      updateWinning: this.updateWinning,
     };
   },
   created() {
@@ -251,11 +268,13 @@ export default {
       this.$store.dispatch("multi/updateAttempts", { attempt: 1 });
       this.$store.dispatch("multi/emptyTwoLastPicks");
     },
-    updateEndGame() {
-      this.$store.dispatch("updateEndGame");
+    updateEndGame(status) {
+      this.$store.dispatch("updateEndGame", { endGame: status });
     },
-    updateTimer(timer) {
-      this.$store.dispatch("solo/updateTimer", { timer: timer });
+    updateTimeElapsed(timeElapsed) {
+      this.$store.dispatch("solo/updateTimeElapsed", {
+        timeElapsed: timeElapsed,
+      });
     },
     openMenu() {
       this.showMenu = true;
@@ -265,6 +284,7 @@ export default {
     },
     newGame() {
       this.$router.push("/starter");
+      this.restart();
     },
     restart() {
       this.reset = true;
@@ -278,6 +298,13 @@ export default {
       this.gameDatas = this.setDatas(this.theme);
       this.reset = false;
       this.$store.dispatch("restart", { status: false });
+    },
+    updateWinning(status) {
+      if (this.isMulti) {
+        this.$store.dispatch("multi/updateWinners");
+        return;
+      }
+      this.$store.dispatch("solo/updateWinning", { winning: status });
     },
   },
 };

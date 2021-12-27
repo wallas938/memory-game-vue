@@ -12,6 +12,7 @@ export default {
     currentTurn: 1,
     attempts: 0,
     matches: [],
+    winners: []
   }),
   getters,
   mutations,
