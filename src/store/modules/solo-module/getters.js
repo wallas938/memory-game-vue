@@ -20,7 +20,10 @@ export default {
   twoLastPicks(state) {
     return state.twoLastPicks;
   },
-  timer(state) {
-    return state.timer;
+  timeElapsed(state) {
+    return state.timeElapsed;
+  },
+  winning(state) {
+    return state.winning;
   }
 };

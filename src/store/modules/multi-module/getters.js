@@ -17,4 +17,7 @@ export default {
   matches(state) {
     return state.matches;
   },
+  winners(state) {
+    return state.winners;
+  }
 };

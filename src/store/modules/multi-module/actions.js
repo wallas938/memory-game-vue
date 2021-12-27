@@ -77,5 +77,24 @@ export default {
     context.commit('resetPlayerPoints');
     context.commit('updateCurrentTurn', { currentTurn: 1 });
     context.dispatch('restart', { status: true }, { root: true });
+  },
+  updateWinners(context) {
+    const players = context.getters['players'];
+    let points = [0];
+    let pointsIndex = 0;
+    players.forEach((player) => {
+      if (player.points > points[pointsIndex]) {
+        points.splice(pointsIndex, 1, player.points);
+        points = points.filter((point) => point === points[pointsIndex]);
+      } else {
+        pointsIndex = points.length - 1;
+      }
+    });
+    const winners = players.filter((player) => {
+      if (points.includes(player.points)) {
+        return player;
+      }
+    });
+    context.commit('updateWinners', { winners: winners});
   }
 };

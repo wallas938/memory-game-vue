@@ -13,8 +13,8 @@ export default {
     const players = setPlayers(payload.setup.playerNumber);
     context.commit('multi/updatePlayers', { players: players });
   },
-  updateEndGame(context) {
-    context.commit('updateEndGame', { endGame: true });
+  updateEndGame(context, payload) {
+    context.commit('updateEndGame', { endGame: payload.endGame });
   },
   restart(context, payload) {
     context.commit('restart', { status: payload.status });

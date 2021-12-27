@@ -9,7 +9,7 @@
     />
   </div>
   <div class="solo-game-data" v-else>
-    <solo-data :pause="pause" @update:timer="updateTimer($event)" />
+    <solo-data @update:timer="updateTimer($event)" />
   </div>
 </template>
 
@@ -21,7 +21,6 @@ export default {
     GamePanel,
     SoloData,
   },
-  props: ['pause'],
   created() {
   },
   emits: ["update:timer"],

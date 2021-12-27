@@ -10,7 +10,8 @@ export default {
     currentPick: null,
     attempts: 0,
     twoLastPicks: [],
-    timer: "2:00"
+    timeElapsed: "2:00",
+    winning: false
   }),
   getters,
   mutations,

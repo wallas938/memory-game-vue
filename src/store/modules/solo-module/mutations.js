@@ -31,7 +31,10 @@ ex: [1,1,5,5]
   emptyTwoLastPicks(state) {
     state.twoLastPicks = [];
   },
-  updateTimer(state, payload) {
-    state.timer = payload.timer;
+  updateTimeElapsed(state, payload) {
+    state.timeElapsed = payload.timeElapsed;
+  },
+  updateWinning(state, payload) {
+    state.winning = payload.winning;
   }
 };

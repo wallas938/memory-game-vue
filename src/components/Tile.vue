@@ -49,6 +49,7 @@ export default {
   emits: [
     "update:moves",
     "update:endGame",
+    "update:winning",
     "update:gameReseted",
     "update:currentPick",
     "update:emptyTwoLastPicks",
@@ -90,7 +91,8 @@ export default {
         (value.length === 8 && this.gridSize === "fourTimesFour") ||
         (value.length === 18 && this.gridSize === "sixTimesSix")
       ) {
-        this.$emit("update:endGame");
+        this.index === 0 && this.$emit("update:endGame", true);
+        this.index === 0 && this.$emit("update:winning", true);
       }
     },
     reset(status) {

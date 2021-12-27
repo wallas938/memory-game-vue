@@ -39,8 +39,8 @@ export default {
     }
     context.commit('updateAttempts', { attempts: 1 });
   },
-  updateTimer(context, payload) {
-    context.commit('updateTimer', { timer: payload.timer });
+  updateTimeElapsed(context, payload) {
+    context.commit('updateTimeElapsed', { timeElapsed: payload.timeElapsed });
   },
   emptyTwoLastPicks(context) {
     context.commit('emptyTwoLastPicks');
@@ -51,5 +51,8 @@ export default {
     context.commit('updateMatches', { matches: [] });
     context.commit('updateAttempts', { attempts: 0 });
     context.dispatch('restart', { status: true }, { root: true });
+  },
+  updateWinning(context, payload) {
+    context.commit('updateWinning', {  winning: payload.winning});
   }
 };
