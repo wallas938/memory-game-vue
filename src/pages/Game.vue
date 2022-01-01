@@ -53,8 +53,10 @@
 import _shuffle from "lodash/shuffle";
 import Tile from "../components/Tile.vue";
 import GameBoard from "../components/GameBoard.vue";
-import GameMenu from "../components/GameMenu.vue";
-import ResultBoard from "../components/ResultBoard.vue";
+import { defineAsyncComponent } from '@vue/runtime-core';
+
+const GameMenu = defineAsyncComponent(() => import("../components/GameMenu.vue"));
+const ResultBoard = defineAsyncComponent(() => import("../components/ResultBoard.vue"));
 
 export default {
   components: {
