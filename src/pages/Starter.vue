@@ -2,7 +2,7 @@
 <template>
   <main class="starter">
     <!-- <h1>memory</h1> -->
-    <h1 style="color: red">Si SE N'EST PAS MOI C'EST QUI ANTOISSE ???!</h1>
+    <h1 style="color: red">Si SE N'EST PAS MOI C'EST QUI ANTOISSE ???!!</h1>
     <game-setup @update:newSetup="onNewSetup"></game-setup>
   </main>
 </template>
