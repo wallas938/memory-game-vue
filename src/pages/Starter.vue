@@ -1,7 +1,7 @@
 <!-- eslint-disable -->
 <template>
   <main class="starter">
-    <h1>memory</h1>
+    <h1>Memory</h1>
     <game-setup @update:newSetup="onNewSetup"></game-setup>
   </main>
 </template>
